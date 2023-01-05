@@ -1,0 +1,8 @@
+.sidebar .nav-item .nav-link{
+    padding: 0.5rem 1rem;
+}
+
+.sidebar-dark .sidebar-brand {
+    color: #ffffff;
+    background-color: #2b49e4;
+}
