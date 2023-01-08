@@ -25,7 +25,7 @@ export class PublicLayoutComponent implements OnInit {
 
   ngOnInit(): void {
     if(localStorage.getItem("userObj") != null){
-      this.router.navigate(["/home"]);
+      this.router.navigate(["/dashboard"]);
     };
   }
 }

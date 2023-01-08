@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api_base_path : "https://v5.boodskap.io/api"
+  api_base_path : "https://v5.boodskap.io/api",
+  api_token: ""
 };
 
 /*

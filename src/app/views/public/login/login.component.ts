@@ -14,6 +14,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 export class LoginComponent implements OnInit {
  
   public submitted = false;
+  public isLoading = false;
 
   constructor(
     protected router: Router, 
@@ -33,18 +34,19 @@ export class LoginComponent implements OnInit {
   public login() {
 
     this.submitted = true;
+    this.isLoading = true;
 
     if (this.loginForm.invalid) {
       return;
     }
 
-    this.httpService.postCall(`/domain/login`, this.loginForm.value).subscribe({
+    this.httpService.loginAPI(this.loginForm.value).subscribe({
         next: (res) => {
           if(res){
               if(res.partDomains.length === 1){
 
                 this._userDataService.userDataChange(res);
-                this.router.navigate(["/home"]);
+                this.router.navigate(["/dashboard"]);
 
               }else if(res.partDomains.length > 1){
 
@@ -60,6 +62,7 @@ export class LoginComponent implements OnInit {
           console.error(err);
         },
         complete: () => {
+          this.isLoading = false;
           console.log("Completed!!!");
         }
       });
@@ -74,7 +77,7 @@ export class LoginComponent implements OnInit {
           if(res != null){
             // localStorage.setItem("userObj",JSON.stringify(res));
             this._userDataService.userDataChange(res);
-            this.router.navigate(["/home"]);
+            this.router.navigate(["/dashboard"]);
           }else{
             console.error(res);
           }

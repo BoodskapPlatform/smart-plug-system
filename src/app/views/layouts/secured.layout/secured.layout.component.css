@@ -4,5 +4,22 @@
 
 .sidebar-dark .sidebar-brand {
     color: #ffffff;
-    background-color: #2b49e4;
+    background-color: #2b262e;
+    border-bottom: 1px solid #ffffff1c;
+}
+
+.nav-item.active{
+    background-color: #d7336d !important;
+}
+
+.header-icons {
+    color: #565656 !important;
+}
+
+.sidebar .nav-item .nav-link .badge-counter, .topbar .nav-item .nav-link .badge-counter {
+    position: absolute;
+    transform: scale(.7);
+    transform-origin: top right;
+    right: -6px;
+    margin-top: -15px;
 }

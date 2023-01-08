@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { UserDataService } from './../../../services/userdata.service';
 import { HttpService } from './../../../utils/http.services';
 import { ColDef } from './../../../../../node_modules/ag-grid-community/dist/lib/entities/colDef.d';
@@ -5,6 +6,7 @@ import { GridSizeChangedEvent, FirstDataRenderedEvent, GridReadyEvent } from './
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { GridApi } from 'ag-grid-community';
+import { first } from 'rxjs';
 
 export interface DeviceStatus {
   battery_status: number;
@@ -18,13 +20,14 @@ export interface DeviceStatus {
 }
 
 @Component({
-  selector: 'app-devices',
-  templateUrl: './devices.component.html',
-  styleUrls: ['./devices.component.css']
+  selector: 'app-messagehistory',
+  templateUrl: './messagehistory.component.html',
+  styleUrls: ['./messagehistory.component.css']
 })
-export class DevicesComponent implements OnInit {
+export class MessagehistoryComponent implements OnInit {
 
   private gridApi!: GridApi;
+  public selectedDeviceId:string = "";
   public paginationPageSize:number = 10;
   public columnDefs: ColDef[] = [
     { headerName: 'Device Id',field: 'devid', minWidth: 150, sortable: true },
@@ -38,12 +41,14 @@ export class DevicesComponent implements OnInit {
     resizable: true,
     cellRenderer: this.customCellRenderer,
   };
-  public devices_list: DeviceStatus[] = [];
+  public message_history_list: DeviceStatus[] = [];
+  public devices_list_arr:string[] = [];
   public userObj:any;
 
   constructor(
     private httpService: HttpService,
-    private _userDataService :UserDataService
+    private _userDataService :UserDataService,
+    private http: HttpClient
     ) {}
 
   onFirstDataRendered(params: FirstDataRenderedEvent) {
@@ -78,34 +83,9 @@ export class DevicesComponent implements OnInit {
     params.api.sizeColumnsToFit();
   }
 
-  getDeviceStatusList() {
-
-    let slug = this.userObj["domainKey"].toLowerCase();
-    let api = "LHT65/list";
-    let method = "post";
-    let key = "";
-    let token = this.userObj["token"];
-  
-    let obj = {
-      authType: "TOKEN"
-    };
-  
-    let data = {
-      domain_key : this.userObj["domainKey"].toLowerCase()
-    };
-
-    this.httpService.microAPI(slug, api, method, data, key, token, obj).subscribe({
-      next: (res) => {
-        this.devices_list = res["values"];
-      },
-      error: (err) => {
-        console.error("err----------");
-        console.error(err);
-      },
-      complete: () => {
-        console.log("Completed!!!");
-      }
-    });
+  changeDevicesList(){
+    this.selectedDeviceId = this.selectedDeviceId;
+    this.getDeviceMsgHistory();
   }
 
   customCellRenderer(params:any) {
@@ -154,11 +134,11 @@ export class DevicesComponent implements OnInit {
 
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.getDeviceStatusList();
+    // this.getSingleDeviceHistory();
   }
 
   onFilterTextBoxChanged() {
-    // this.getDeviceStatusList();
+    // this.getSingleDeviceHistory();
     this.gridApi.setQuickFilter(  //Client side data filtering
       (document.getElementById('filter-text-box') as HTMLInputElement).value
     );
@@ -171,15 +151,97 @@ export class DevicesComponent implements OnInit {
     console.log("paginationPageSize-------");
     console.log(this.paginationPageSize);
 
-    // this.getDeviceStatusList();
+    // this.getSingleDeviceHistory();
     // this.gridApi.setQuickFilter(
     //   (document.getElementById('filter-text-box') as HTMLInputElement).value
     // );
   }
 
+  getAllDevices(): Promise<string> {
+
+    return new Promise((resolve, reject) => {
+      let slug = this.userObj["domainKey"].toLowerCase();
+      let api = "LHT65/devices";
+      let method = "post";
+      let key = "";
+      let token = this.userObj["token"];
+    
+      let obj = {
+        authType: "TOKEN"
+      };
+    
+      let data = {};
+
+      this.httpService.microAPI(slug, api, method, data, key, token, obj).subscribe({
+        next: (res) => {
+          this.devices_list_arr = res["values"];
+          this.selectedDeviceId = this.devices_list_arr[0];
+          this.getDeviceMsgHistory();
+          // resolve(res);
+        },
+        error: (err) => {
+          // reject(err);
+        },
+        complete: () => {
+          //console.log("Completed!!!");
+        }
+      });
+    });
+  }
+
+   getDeviceMsgHistory(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let slug = this.userObj["domainKey"].toLowerCase();
+        let api = "LHT65/between";
+        let method = "post";
+        let key = "";
+        let token = this.userObj["token"];
+      
+        let obj = {
+          authType: "TOKEN"
+        };
+      
+        let data = {
+          "devid": this.selectedDeviceId,
+          "size": this.paginationPageSize,
+          "sort": "desc",
+          "tz":"+05:30",
+          "fdate": "2023-01-02",
+          "tdate": "2023-01-09"
+        };
+
+        this.httpService.microAPI(slug, api, method, data, key, token, obj).subscribe({
+          next: (res) => {
+            this.message_history_list = res["values"];
+            // resolve(res);
+          },
+          error: (err) => {
+            // reject(err);
+          },
+          complete: () => {
+            //console.log("Completed!!!");
+          }
+        });
+    });
+  }
+
+  // getInitialData() {
+  //   this.getAllDevices().then(data => {
+  //     let devid = "";
+  //     if(data != null){
+  //         devid = Object.values(data)[1][0];
+  //         this.selectedDeviceId = devid;
+  //     }
+  //     return this.getDeviceMsgHistory(); // Return a new Promise
+  //   })
+  //   .then(() => console.log('Done!'))
+  //   .catch(error => console.error(error));
+  // }
+  
   ngOnInit(): void {
     this._userDataService.userDataChange$.subscribe(value => {
       this.userObj = value;
+      this.getAllDevices();
     });
   }
 }

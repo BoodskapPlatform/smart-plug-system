@@ -7,14 +7,14 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="!#" routerLink="/home">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="javascript:void(0);" routerLink="/dashboard">
                 <div class="sidebar-brand-icon rotate-n-15">
                     
                 </div>
                 <div class="sidebar-brand-text mx-3">
-                    <img src="../../../../assets/images/iot.png"
+                    <img src="../../../../assets/images/plug.png"
                       style="width: 40px;filter: contrast(10);margin-right: 5px;" alt="logo">
-                    <span>Smart IoT</span>
+                    <span>Smart Plug</span>
                 </div>
             </a>
 
@@ -22,10 +22,26 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link"  href="#!" routerLink='/home'>
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" href="javascript:void(0);" routerLink='/dashboard'>
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Home</span></a>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link collapsed" href="javascript:void(0);"  routerLink='/devices'>
+                    <i class="fas fa-fw fa-hdd"></i>
+                    <span>Device Status</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link collapsed" href="javascript:void(0);"  routerLink='/messages-history'>
+                    <i class="fas fa-fw fa-envelope"></i>
+                    <span>Message History</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -33,33 +49,25 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                Administration
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="!#" routerLink='/devices'>
-                    <i class="fas fa-fw fa-hdd"></i>
-                    <span>Device Status</span>
-                </a>
-            </li>
-
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link collapsed" href="javascript:void(0);" routerLink='/assets'>
                     <i class="fas fa-fw fa-cubes"></i>
                     <span>Assets</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link collapsed" href="javascript:void(0);" routerLink='/customers'>
                     <i class="fas fa-fw fa-users"></i>
                     <span>Customers</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link collapsed" href="javascript:void(0);" routerLink='/inventory'>
                     <i class="fas fa-fw fa-list"></i>
                     <span>Inventory</span>
@@ -67,11 +75,6 @@
             </li>
         </ul>
         <!-- End of Sidebar -->
-
-        <!-- <h3>Welcome back {{ userObj["user"]["firstName"] }} {{ userObj["user"]["lastName"] }}</h3>
-        <h6>{{ userObj["user"]["email"] }}</h6>
-        <br>
-        <button class="btn btn-primary" (click)="logout()">logout</button> -->
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -88,10 +91,10 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
+                    <!-- <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            <input type="text" class="form-control bg-light border-0 small input-box" placeholder="Search for..."
                                 aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
@@ -99,7 +102,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> -->
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -131,7 +134,7 @@
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <div ngbDropdown class="d-inline-block" display="dynamic" placement="bottom-end">
-                                <a ngbDropdownToggle class="nav-link dropdown-toggle" href="javascript:void(0);" id="alertsDropdown" role="button"
+                                <a ngbDropdownToggle class="nav-link dropdown-toggle header-icons" href="javascript:void(0);" id="alertsDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
                                     <!-- Counter - Alerts -->
@@ -184,7 +187,7 @@
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <div ngbDropdown class="d-inline-block" display="dynamic" placement="bottom-end">
-                                <a ngbDropdownToggle class="nav-link dropdown-toggle" href="javascript:void(0);" id="messagesDropdown" role="button"
+                                <a ngbDropdownToggle class="nav-link dropdown-toggle header-icons" href="javascript:void(0);" id="messagesDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-envelope fa-fw"></i>
                                     <!-- Counter - Messages -->
@@ -290,7 +293,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>All Copyright Reserved &copy; 2022 </span>
                     </div>
                 </div>
             </footer>

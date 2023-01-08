@@ -1,3 +1,4 @@
+import { AppService } from './services/app.services';
 import { UserDataService } from './services/userdata.service';
 import { HttpService } from './utils/http.services';
 import { NgModule } from '@angular/core';
@@ -9,6 +10,7 @@ import { LoginComponent } from './views/public/login/login.component';
 import { DomainsComponent } from './views/public/domains/domains.component';
 import { RegisterComponent } from './views/public/register/register.component';
 import { HomeComponent } from './views/secured/home/home.component';
+import { MessagehistoryComponent } from './views/secured/messagehistory/messagehistory.component';
 import { ProfileComponent } from './views/secured/profile/profile.component';
 import { InventoryComponent } from './views/secured/inventory/inventory.component';
 import { CustomersComponent } from './views/secured/customers/customers.component';
@@ -20,8 +22,10 @@ import { PublicLayoutComponent } from './views/layouts/public.layout/public.layo
 import { SecuredLayoutComponent } from './views/layouts/secured.layout/secured.layout.component';
 import { AuthService } from './services/auth.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [
@@ -38,19 +42,24 @@ import { HttpClientModule } from '@angular/common/http';
     SupportComponent,
     PublicLayoutComponent,
     SecuredLayoutComponent,
-    DomainsComponent
+    DomainsComponent,
+    MessagehistoryComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
-    ReactiveFormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgxDatatableModule,
+    AgGridModule
   ],
   providers: [
     AuthService,
     HttpService,
-    UserDataService
+    UserDataService,
+    AppService
   ],
   bootstrap: [AppComponent]
 })
