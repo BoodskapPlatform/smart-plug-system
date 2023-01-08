@@ -46,10 +46,14 @@
                              [defaultColDef]="defaultColDef"
                              [rowData]="message_history_list"
                              [pagination]="true"
+                             [cacheBlockSize]="paginationPageSize"
                              [paginationPageSize]="paginationPageSize"
+                             [serverSideInfiniteScroll]="true"
                              (firstDataRendered)="onFirstDataRendered($event)"
                              (gridSizeChanged)="onGridSizeChanged($event)"
                              (gridReady)="onGridReady($event)"
+                             (paginationChanged)="onPaginationChanged($event)"
+                             (suppressPaginationPanel)=true
                            ></ag-grid-angular>
                    </div>
 

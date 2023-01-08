@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { UserDataService } from './../../../services/userdata.service';
 import { HttpService } from './../../../utils/http.services';
 import { ColDef } from './../../../../../node_modules/ag-grid-community/dist/lib/entities/colDef.d';
@@ -6,7 +5,6 @@ import { GridSizeChangedEvent, FirstDataRenderedEvent, GridReadyEvent } from './
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { GridApi } from 'ag-grid-community';
-import { first } from 'rxjs';
 
 export interface DeviceStatus {
   battery_status: number;
@@ -39,16 +37,16 @@ export class MessagehistoryComponent implements OnInit {
   ];
   public defaultColDef: ColDef = {
     resizable: true,
-    cellRenderer: this.customCellRenderer,
+    cellRenderer: this.customCellRenderer
   };
   public message_history_list: DeviceStatus[] = [];
   public devices_list_arr:string[] = [];
   public userObj:any;
+  public nextPage:number = 2;
 
   constructor(
     private httpService: HttpService,
-    private _userDataService :UserDataService,
-    private http: HttpClient
+    private _userDataService :UserDataService
     ) {}
 
   onFirstDataRendered(params: FirstDataRenderedEvent) {
@@ -147,11 +145,7 @@ export class MessagehistoryComponent implements OnInit {
   onPagination(value: string) {
 
     this.paginationPageSize = parseInt(value);
-
-    console.log("paginationPageSize-------");
-    console.log(this.paginationPageSize);
-
-    // this.getSingleDeviceHistory();
+    this.getDeviceMsgHistory();
     // this.gridApi.setQuickFilter(
     //   (document.getElementById('filter-text-box') as HTMLInputElement).value
     // );
@@ -189,7 +183,7 @@ export class MessagehistoryComponent implements OnInit {
     });
   }
 
-   getDeviceMsgHistory(): Promise<string> {
+  getDeviceMsgHistory(): Promise<string> {
     return new Promise((resolve, reject) => {
         let slug = this.userObj["domainKey"].toLowerCase();
         let api = "LHT65/between";
@@ -203,7 +197,7 @@ export class MessagehistoryComponent implements OnInit {
       
         let data = {
           "devid": this.selectedDeviceId,
-          "size": this.paginationPageSize,
+          "size": this.paginationPageSize * this.nextPage,
           "sort": "desc",
           "tz":"+05:30",
           "fdate": "2023-01-02",
@@ -223,6 +217,27 @@ export class MessagehistoryComponent implements OnInit {
           }
         });
     });
+  }
+
+  onPaginationChanged(params: GridReadyEvent) {
+    console.log('onPaginationPageLoaded');
+    // Workaround for bug in events order
+    if (this.gridApi!) {
+      this.setText('#lbLastPageFound', this.gridApi.paginationIsLastPageFound());
+      this.setText('#lbPageSize', this.gridApi.paginationGetPageSize());
+      // we +1 to current page, as pages are zero based
+      this.setText('#lbCurrentPage', this.gridApi.paginationGetCurrentPage() + 1);
+      this.setText('#lbTotalPages', this.gridApi.paginationGetTotalPages());
+      this.setLastButtonDisabled(!this.gridApi.paginationIsLastPageFound());
+    }
+  }
+
+  setText(selector: string, text: any) {
+    (document.querySelector(selector) as any).innerHTML = text;
+  }
+
+  setLastButtonDisabled(disabled: boolean) {
+    (document.querySelector('#btLast') as any).disabled = disabled;
   }
 
   // getInitialData() {
